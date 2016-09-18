@@ -16,7 +16,7 @@ object Main extends App {
       ConsoleReader.printResult(expressions.find(_.isFailure) match {
         case Some(Failure(ex)) ⇒ Failure(ex)
         case None ⇒
-          Unification.unifyExpressions(Map.empty,
+          Unification(Map.empty,
             expressions.map(_.get): _*)
         case _ ⇒ Failure(new RuntimeException("Can't happen"))
       })

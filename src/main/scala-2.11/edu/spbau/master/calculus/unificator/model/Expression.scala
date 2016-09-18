@@ -15,14 +15,15 @@ case class Function(name: String, args: Seq[Expression]) extends Expression {
   require(name != null, "Name is null!")
   require(args != null, "Args is null!")
 
-  def contains(variable: Variable): Boolean = (false /: args) {
-    case (result, expr) ⇒ result || {
-      expr match {
-        case v: Variable ⇒ v == variable
-        case f: Function ⇒ f.contains(variable)
-      }
+  lazy val variables: Set[Variable] = (Set.empty[Variable] /: args) {
+    case (s, expr) ⇒ expr match {
+      case v: Variable ⇒ s + v
+      case f: Function ⇒ s ++ f.variables
     }
   }
+
+  def contains(variable: Variable): Boolean = variables.contains(variable)
+
 
   override def toString: String = args.mkString(s"$name(", ", ", ")")
 }
